@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Create key &middot; {{ app_name }}{% endblock %}
+{% block content %}
+<h1>Create an API key</h1>
+
+<div class="card">
+  <form method="post" action="{{ url_for('create_from_form') }}">
+    <label>Name
+      <input name="name" placeholder="ci-deploy" required>
+    </label>
+    <label>Prefix
+      <input name="prefix" value="sk_live_">
+    </label>
+    <fieldset style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+      <legend class="muted">Scopes</legend>
+      <div class="row">
+      {% for s in scopes %}
+        <label style="flex-direction:row;align-items:center;gap:6px">
+          <input type="checkbox" name="scopes" value="{{ s }}"
+                 {% if s == "read:users" %}checked{% endif %}>
+          <span class="mono">{{ s }}</span>
+        </label>
+      {% endfor %}
+      </div>
+    </fieldset>
+    <button type="submit">Create key</button>
+  </form>
+</div>
+
+<div class="card">
+  <p class="muted" style="margin:0">
+    The plaintext secret is printed once as a flash message on the
+    <a href="{{ url_for('index') }}">keys page</a> and is never recoverable
+    afterwards. <code>admin</code> implies every other scope.
+  </p>
+</div>
+{% endblock %}

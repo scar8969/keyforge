@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Keys &middot; {{ app_name }}{% endblock %}
+{% block content %}
+<h1>API keys</h1>
+
+<div class="grid">
+  <div class="kpi"><div class="n">{{ counts.keys }}</div><div class="l">keys</div></div>
+  <div class="kpi"><div class="n">{{ counts.active }}</div><div class="l">active</div></div>
+  <div class="kpi"><div class="n">{{ counts.revoked }}</div><div class="l">revoked</div></div>
+  <div class="kpi"><div class="n">{{ counts.uses }}</div><div class="l">usage logs</div></div>
+</div>
+
+<div class="card">
+  <div class="row">
+    <a href="{{ url_for('create_form') }}"><button type="button">Create key</button></a>
+    <span class="muted">Secrets are shown once, at creation or rotation. Only the
+      sha256 hash is stored.</span>
+  </div>
+</div>
+
+<h2>Stored keys</h2>
+{% if rows %}
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Name</th><th>Prefix</th><th>Scopes</th><th>Status</th>
+        <th>Uses</th><th>Created</th><th>Last seen</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for k in rows %}
+      <tr>
+        <td class="mono">{{ k.id }}</td>
+        <td>{{ k.name or "(unnamed)" }}</td>
+        <td class="mono">{{ k.prefix }}</td>
+        <td>
+          {% if k.scopes %}
+            {% for s in k.scopes %}<span class="tag">{{ s }}</span> {% endfor %}
+          {% else %}<span class="muted">&mdash;</span>{% endif %}
+        </td>
+        <td>
+          {% if k.status == "active" %}<span class="tag ok">active</span>
+          {% elif k.status == "revoked" %}<span class="tag bad">revoked</span>
+          {% else %}<span class="tag warn">{{ k.status }}</span>{% endif %}
+        </td>
+        <td>{{ k.uses }}</td>
+        <td class="mono muted">{{ k.created_at.strftime("%Y-%m-%d %H:%M") if k.created_at else "—" }}</td>
+        <td class="mono muted">{{ k.last_seen.strftime("%Y-%m-%d %H:%M") if k.last_seen else "never" }}</td>
+        <td>
+          <div class="row">
+            <form method="post" action="{{ url_for('rotate_from_form', kid=k.id) }}">
+              <button type="submit" class="ghost">Rotate</button>
+            </form>
+            {% if k.status != "revoked" %}
+            <form method="post" action="{{ url_for('revoke_from_form', kid=k.id) }}">
+              <button type="submit" class="danger">Revoke</button>
+            </form>
+            {% endif %}
+            <form method="post" action="{{ url_for('delete_from_form', kid=k.id) }}">
+              <button type="submit" class="danger">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">No keys yet. Use <a href="{{ url_for('create_form') }}">Create key</a>
+  or <span class="mono">python cli.py create --name ci-deploy</span>.</div>
+{% endif %}
+
+<h2>Recent audit entries</h2>
+{% if audit %}
+<div class="card">
+  <table>
+    <thead><tr><th>#</th><th>Key</th><th>Action</th><th>Detail</th><th>IP</th><th>At</th></tr></thead>
+    <tbody>
+    {% for a in audit %}
+      <tr>
+        <td class="mono">{{ a.id }}</td>
+        <td class="mono">#{{ a.key_id }}</td>
+        <td><span class="tag">{{ a.action }}</span></td>
+        <td class="muted">{{ a.detail }}</td>
+        <td class="mono muted">{{ a.ip or "—" }}</td>
+        <td class="mono muted">{{ a.at.strftime("%Y-%m-%d %H:%M:%S") if a.at else "—" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">No audit entries yet &mdash; they are written when a key is created,
+  rotated, or revoked.</div>
+{% endif %}
+{% endblock %}

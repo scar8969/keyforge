@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: "🔑 API Key Tool"
+  version: 0.1.0
+  description: >-
+    Issue, rotate, revoke, and audit API keys. Scopes are checked per request,
+    quotas are enforced per key, and every mutating operation appends an
+    audit-log row.
+paths:
+  /api/health:
+    get:
+      summary: liveness probe
+      responses:
+        "200":
+          description: ok
+  /api/keys:
+    get:
+      summary: list keys (secrets are never returned)
+      responses:
+        "200":
+          description: ok
+    post:
+      summary: mint a key; the secret is returned exactly once
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                prefix: {type: string}
+                scopes: {type: array, items: {type: string}}
+                quota: {type: object}
+      responses:
+        "200":
+          description: ok
+  /api/keys/{id}/rotate:
+    post:
+      summary: replace a key's secret
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        "200":
+          description: ok
+        "404":
+          description: no key with that id
+  /api/keys/{id}/revoke:
+    post:
+      summary: mark a key revoked
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        "200":
+          description: ok
+        "404":
+          description: no key with that id
+  /api/keys/{id}/usage:
+    get:
+      summary: last 100 usage entries for a key
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        "200":
+          description: ok
+        "404":
+          description: no key with that id
+  /api/audit:
+    get:
+      summary: the 50 most recent audit-log rows
+      responses:
+        "200":
+          description: ok
+  /api/users:
+    get:
+      summary: scope-protected example endpoint
+      description: >-
+        Requires the `X-API-Key` header. Unauthenticated requests are rejected
+        with 401, an active key missing the `read:users` scope is rejected with
+        403, and a key over its daily quota is rejected with 429.
+      parameters:
+        - name: X-API-Key
+          in: header
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: ok
+        "401":
+          description: missing, unknown, revoked, or expired API key
+        "403":
+          description: the key lacks the read:users scope
+        "429":
+          description: daily request quota exhausted
+  /create:
+    get:
+      summary: HTML key-creation form
+      responses:
+        "200":
+          description: text/html
+  /keys/new:
+    post:
+      summary: create a key from the HTML form
+      responses:
+        "302":
+          description: redirect to the dashboard
+  /keys/{id}/rotate:
+    post:
+      summary: rotate a key from the HTML form
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        "302":
+          description: redirect to the dashboard
+  /keys/{id}/revoke:
+    post:
+      summary: revoke a key from the HTML form
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        "302":
+          description: redirect to the dashboard
+  /keys/{id}/delete:
+    post:
+      summary: delete a key from the HTML form
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        "302":
+          description: redirect to the dashboard
