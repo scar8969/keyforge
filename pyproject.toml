@@ -3,13 +3,13 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "a8-api-key-tool"
+name = "keyforge"
 version = "0.1.0"
-description = "Issue, rotate, revoke, and audit API keys. Each key carries a scope list and a"
+description = "API key issuing service: create, rotate, revoke and audit keys with scopes and per-key quota."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "project-skeletons maintainers" }]
+authors = [{ name = "Priyanshu Rout" }]
 keywords = ["flask", "service", "api_key_tool"]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -46,7 +46,7 @@ Documentation = "https://example.invalid/api_key_tool/docs"
 Issues = "https://example.invalid/api_key_tool/issues"
 
 [project.scripts]
-a8-api-key-tool = "api_key_tool.cli:main"
+keyforge = "api_key_tool.cli:main"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

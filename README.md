@@ -1,4 +1,4 @@
-# 🔑 API Key Tool
+# keyforge
 
 > Issue, rotate, revoke, and audit API keys. Each key carries a scope list and a
 
@@ -6,8 +6,8 @@
 [![python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)](pyproject.toml)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-a8_api_key_tool is a Flask service delivered as an installable, typed, test-covered
-distribution. The business logic is unchanged from the original skeleton; what
+keyforge is a Flask service delivered as an installable, typed, test-covered
+distribution. The business logic is unchanged from the original service; what
 is new is the engineering around it: a packaging story, a configuration
 contract, structured observability, operational endpoints, a hardened
 container, and the gates that keep all of that true.
@@ -17,7 +17,7 @@ container, and the gates that keep all of that true.
 ## Quickstart
 
 ```sh
-git clone <your-fork> a8_api_key_tool && cd a8_api_key_tool
+git clone <your-fork> keyforge && cd keyforge
 python -m venv .venv
 . .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
@@ -168,7 +168,7 @@ variable, rather than surfacing as a confusing runtime error later.
 | `/keys/{id}/rotate` | S | HTML/JSON |
 | `/keys/{id}/rotate` | T | HTML/JSON |
 
-The frozen machine-readable contract is `openapi/a8_api_key_tool.yaml`; it is the
+The frozen machine-readable contract is `openapi/keyforge.yaml`; it is the
 source of truth for path and method coverage.
 
 ---
@@ -186,9 +186,9 @@ source of truth for path and method coverage.
 │   ├── ARCHITECTURE.md
 │   └── OPERATIONS.md
 ├── openapi
-│   └── a8_api_key_tool.yaml
+│   └── keyforge.yaml
 ├── schema
-│   └── a8_api_key_tool.sql
+│   └── keyforge.sql
 ├── src
 │   └── api_key_tool
 │       ├── keys
@@ -206,7 +206,7 @@ source of truth for path and method coverage.
 │       └── py.typed
 ├── tests
 │   ├── conftest.py
-│   ├── test_a8_api_key_tool.py
+│   ├── test_keyforge.py
 │   ├── test_config.py
 │   └── test_ops.py
 ├── .dockerignore

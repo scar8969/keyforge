@@ -9,7 +9,7 @@ they do, and what breaks first under load.
 
 ## 1. Context
 
-a8_api_key_tool is a single-process Flask service. It owns its own database (SQLite by
+keyforge is a single-process Flask service. It owns its own database (SQLite by
 default, any SQLAlchemy-supported backend via `DATABASE_URL`) and is deployed
 behind a reverse proxy or an orchestrator.
 
@@ -74,7 +74,7 @@ flowchart TB
 | `templates/base.html` | asset |
 | `templates/create.html` | asset |
 | `templates/index.html` | asset |
-| `tests/test_a8_api_key_tool.py` | module |
+| `tests/test_keyforge.py` | module |
 | `_app.py` | asset |
 
 ---
@@ -137,9 +137,9 @@ writable lives under `/app`.
 
 | Table | Owner |
 | --- | --- |
-| `keys` | owned by `a8_api_key_tool` |
-| `usage_logs` | owned by `a8_api_key_tool` |
-| `audit_logs` | owned by `a8_api_key_tool` |
+| `keys` | owned by `keyforge` |
+| `usage_logs` | owned by `keyforge` |
+| `audit_logs` | owned by `keyforge` |
 
 Tables are created by the application's own bootstrap on first use. No migration
 tool is wired in; the schema is additive, and the service tolerates a missing or

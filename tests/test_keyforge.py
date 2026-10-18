@@ -1,4 +1,4 @@
-"""A8 api-key-tool — tests. Run: pytest test_a8_api_key_tool.py"""
+"""A8 api-key-tool — tests. Run: pytest test_keyforge.py"""
 import sys, os
 
 import pytest

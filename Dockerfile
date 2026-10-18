@@ -34,7 +34,7 @@ RUN groupadd --system --gid 1001 app \
 WORKDIR /app
 
 COPY --from=builder /wheels /wheels
-RUN python -m pip install --no-cache-dir --no-index --find-links=/wheels a8-api-key-tool \
+RUN python -m pip install --no-cache-dir --no-index --find-links=/wheels keyforge \
  && rm -rf /wheels \
  && mkdir -p /var/lib/api_key_tool/instance /var/lib/api_key_tool/log \
  && chown -R app:app /var/lib/api_key_tool /app
