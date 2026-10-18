@@ -1,10 +1,14 @@
-import argparse, json, os, sys
-from . import paths
+import argparse
+import json
+import sys
+
 
 def _app():
     """Import the Flask app lazily so --help works without the web deps loaded."""
     from ._app import app
+
     return app
+
 
 def cmd_create(args):
     from .keys.generator import generate, hash_key
@@ -13,15 +17,23 @@ def cmd_create(args):
     app = _app()
     with app.app_context():
         secret = generate(args.prefix)
-        k = Key(name=args.name, prefix=args.prefix, secret_hash=hash_key(secret),
-                scopes_json=json.dumps(list(args.scopes)))
+        k = Key(
+            name=args.name,
+            prefix=args.prefix,
+            secret_hash=hash_key(secret),
+            scopes_json=json.dumps(list(args.scopes)),
+        )
         db.session.add(k)
         db.session.flush()
-        db.session.add(AuditLog(key_id=k.id, action="created",
-                                detail="via cli scopes=%s" % (list(args.scopes),)))
+        db.session.add(
+            AuditLog(
+                key_id=k.id, action="created", detail="via cli scopes=%s" % (list(args.scopes),)
+            )
+        )
         db.session.commit()
         print(secret)  # shown once
     return 0
+
 
 def cmd_list(args):
     from .models import Key
@@ -33,9 +45,12 @@ def cmd_list(args):
         print(json.dumps(rows, indent=2))
     else:
         for r in rows:
-            print("#%-4s %-20s %-10s %-9s %s" % (r["id"], r["name"], r["status"],
-                                                 r["prefix"], r["scopes"]))
+            print(
+                "#%-4s %-20s %-10s %-9s %s"
+                % (r["id"], r["name"], r["status"], r["prefix"], r["scopes"])
+            )
     return 0
+
 
 def cmd_rotate(args):
     from .keys.generator import generate, hash_key
@@ -54,6 +69,7 @@ def cmd_rotate(args):
         print(secret)  # shown once
     return 0
 
+
 def cmd_revoke(args):
     from .models import AuditLog, Key, db
 
@@ -69,11 +85,13 @@ def cmd_revoke(args):
         print("revoked #%d" % k.id)
     return 0
 
+
 def main():
     p = argparse.ArgumentParser(prog="apikey", description="API key manager")
     sub = p.add_subparsers(dest="cmd")
     c = sub.add_parser("create", help="mint a new key and print the secret once")
-    c.add_argument("--name", required=True); c.add_argument("--prefix", default="sk_live_")
+    c.add_argument("--name", required=True)
+    c.add_argument("--prefix", default="sk_live_")
     c.add_argument("--scopes", nargs="+", default=["read:users"])
     l = sub.add_parser("list", help="list stored keys")
     l.add_argument("--json", action="store_true")

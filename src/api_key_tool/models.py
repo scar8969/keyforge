@@ -1,7 +1,9 @@
 from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 class Key(db.Model):
     __tablename__ = "keys"
@@ -17,10 +19,16 @@ class Key(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
-        return {"id": self.id, "name": self.name, "prefix": self.prefix,
-                "scopes": self.scopes_json, "status": self.status,
-                "expires_at": self.expires_at.isoformat() if self.expires_at else "",
-                "last_seen": self.last_seen.isoformat() if self.last_seen else ""}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "prefix": self.prefix,
+            "scopes": self.scopes_json,
+            "status": self.status,
+            "expires_at": self.expires_at.isoformat() if self.expires_at else "",
+            "last_seen": self.last_seen.isoformat() if self.last_seen else "",
+        }
+
 
 class UsageLog(db.Model):
     __tablename__ = "usage_logs"
@@ -31,8 +39,10 @@ class UsageLog(db.Model):
     ip = db.Column(db.String(64), default="")
     tokens = db.Column(db.Integer, default=0)
 
+
 class AuditLog(db.Model):
     """Append-only trail of every mutating key operation."""
+
     __tablename__ = "audit_logs"
     id = db.Column(db.Integer, primary_key=True)
     key_id = db.Column(db.Integer, db.ForeignKey("keys.id"), index=True)
@@ -42,6 +52,11 @@ class AuditLog(db.Model):
     at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
-        return {"id": self.id, "key_id": self.key_id, "action": self.action,
-                "detail": self.detail, "ip": self.ip,
-                "at": self.at.isoformat() if self.at else ""}
+        return {
+            "id": self.id,
+            "key_id": self.key_id,
+            "action": self.action,
+            "detail": self.detail,
+            "ip": self.ip,
+            "at": self.at.isoformat() if self.at else "",
+        }

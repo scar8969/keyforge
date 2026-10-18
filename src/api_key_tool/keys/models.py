@@ -11,6 +11,7 @@ New code in this package should import from the root module directly:
 
     from models import Key, UsageLog, db
 """
-from ..models import AuditLog, Key, UsageLog, db  # noqa: F401
 
-__all__ = ["db", "Key", "UsageLog", "AuditLog"]
+from ..models import AuditLog, Key, UsageLog, db
+
+__all__ = ["AuditLog", "Key", "UsageLog", "db"]

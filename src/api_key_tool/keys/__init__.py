@@ -17,6 +17,7 @@ package is
 and NOT 'from . import db', which would look for a non-existent keys/db.py.
 The handle is re-exported here only so 'from keys import db' keeps working.
 """
-from ..models import AuditLog, Key, UsageLog, db  # noqa: F401
 
-__all__ = ["db", "Key", "UsageLog", "AuditLog"]
+from ..models import AuditLog, Key, UsageLog, db
+
+__all__ = ["AuditLog", "Key", "UsageLog", "db"]
