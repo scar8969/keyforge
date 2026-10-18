@@ -17,7 +17,7 @@ def _auth():
     key = Key.query.filter_by(secret_hash=hash_key(k)).first()
     if not key or key.status != "active":
         return None
-    if key.expires_at and key.expires_at < datetime.utcnow():
+    if key.expires_at and key.expires_at < datetime.datetime.now(datetime.UTC).replace(tzinfo=None):
         key.status = "expired"
         db.session.commit()
         return None
