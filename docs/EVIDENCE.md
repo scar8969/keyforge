@@ -4,7 +4,7 @@ Every line below was produced by a command run against this exact checkout, on t
 
 | | |
 | --- | --- |
-| Generated | 2026-10-19 02:21 |
+| Generated | 2026-10-19 09:39 |
 | Python | 3.14.7 |
 | Platform | Windows 11 |
 
@@ -15,7 +15,7 @@ python -m pytest -q
 ```
 
 - exit code **0**
-- 25 passed, 3 warnings in 1.05s
+- 25 passed, 3 warnings in 0.91s
 
 ## Static gates
 
@@ -40,6 +40,24 @@ The application was imported through `wsgi.py` and each GET path declared in `op
 | 200 | `/create` | 5561 | text/html |
 
 6 paths walked, 0 of them raised or answered 5xx.
+
+## CLI
+
+```
+usage: apikey [-h] {create,list,rotate,revoke} ...
+
+API key manager
+
+positional arguments:
+  {create,list,rotate,revoke}
+    create              mint a new key and print the secret once
+    list                list stored keys
+    rotate              rotate a key secret
+    revoke              revoke a key
+
+options:
+  -h, --help            show this help message and exit
+```
 
 ## Screenshots
 
