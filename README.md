@@ -142,7 +142,7 @@ Produced on this checkout by `pytest --cov` and by booting `wsgi.py` and issuing
 | --- | --- |
 | Tests | **25 / 25 passed** (2.9 s, exit 0) |
 | Line coverage | **63.8%** — 478 of 717 statements |
-| Source | 16 files / 1,558 lines |
+| Source | 16 files / 1,576 lines |
 | Test code | 4 files / 255 lines |
 | Documented paths | 12 in the spec, 6 GET |
 | Live probe | 12 GET requests to the booted app, **10 answered 200** |
@@ -185,7 +185,7 @@ keyforge/
 │   ├── models.py                        63  
 │   ├── paths.py                         52  Filesystem layout for api_key_tool
 │   ├── keys/quota.py                    41  
-│   ├── keys/generator.py                18  
+│   ├── clock.py                         18  Naive UTC timestamps
 ├── openapi/keyforge.yaml                  the contract of record
 ├── schema/keyforge.sql                    the DDL
 ├── tests/                       the suite that has to stay green

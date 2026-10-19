@@ -1,6 +1,6 @@
-from datetime import datetime
-
 from flask_sqlalchemy import SQLAlchemy
+
+from .clock import utcnow
 
 db = SQLAlchemy()
 
@@ -16,7 +16,7 @@ class Key(db.Model):
     status = db.Column(db.String(16), default="active")  # active|revoked|expired
     expires_at = db.Column(db.DateTime, nullable=True)
     last_seen = db.Column(db.DateTime, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=utcnow)
 
     def to_dict(self):
         return {
@@ -34,7 +34,7 @@ class UsageLog(db.Model):
     __tablename__ = "usage_logs"
     id = db.Column(db.Integer, primary_key=True)
     key_id = db.Column(db.Integer, db.ForeignKey("keys.id"), index=True)
-    ts = db.Column(db.DateTime, default=datetime.utcnow)
+    ts = db.Column(db.DateTime, default=utcnow)
     endpoint = db.Column(db.String(128), default="")
     ip = db.Column(db.String(64), default="")
     tokens = db.Column(db.Integer, default=0)
@@ -49,7 +49,7 @@ class AuditLog(db.Model):
     action = db.Column(db.String(32), default="")  # created|rotated|revoked
     detail = db.Column(db.String(256), default="")
     ip = db.Column(db.String(64), default="")
-    at = db.Column(db.DateTime, default=datetime.utcnow)
+    at = db.Column(db.DateTime, default=utcnow)
 
     def to_dict(self):
         return {
